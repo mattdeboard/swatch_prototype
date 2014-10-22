@@ -15,7 +15,7 @@ module.exports = function (grunt) {
     // Time how long tasks take. Can help when optimizing build times
     require('time-grunt')(grunt);
 
-    // grunt.loadNpmTasks('grunt-browserify');
+    grunt.loadNpmTasks('grunt-browserify');
 
     // Define the configuration for all the tasks
     grunt.initConfig({
@@ -28,18 +28,24 @@ module.exports = function (grunt) {
 
         browserify: {
             options: {
-                extension: 'jsx',
-                ignoreMTime: false,
                 transform: [
-                    require('grunt-react').browserify
+                    require('grunt-react').browserify,
                 ]
             },
             app: {
                 files: {
                     '<%= yeoman.app %>/scripts/app.js': [
-                        '<%= yeoman.app %>/jsx/'
+                        '<%= yeoman.app %>/jsx/*.jsx'
                     ]
                 }
+            }
+        },
+
+        shell: {
+            'build-jsx': {
+                command: 'jsx -x jsx --no-cache-dir <%= yeoman.app %>/jsx/ <%= yeoman.app %>/scripts/',
+                stdout: true,
+                failOnError: true
             }
         },
 
@@ -363,6 +369,19 @@ module.exports = function (grunt) {
         'mocha'
     ]);
 
+    grunt.registerTask('jsx', [
+        'shell:build-jsx'
+    ]);
+
+    grunt.registerTask('dev', [
+        'clean:dist',
+        'jsx',
+        'useminPrepare',
+        'concurrent:dist',
+        'autoprefixer',
+        'concat'
+    ]);
+
     grunt.registerTask('build', [
         'clean:dist',
         'browserify',
@@ -374,7 +393,7 @@ module.exports = function (grunt) {
         'uglify',
         'copy:dist',
         'rev',
-        'usemin'
+        'usemin',
     ]);
 
     grunt.registerTask('default', [
