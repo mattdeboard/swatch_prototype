@@ -35,7 +35,7 @@ module.exports = function (grunt) {
             app: {
                 files: {
                     '<%= yeoman.app %>/scripts/app.js': [
-                        '<%= yeoman.app %>/jsx/*.jsx'
+                        '<%= yeoman.app %>/jsx/**/*.jsx'
                     ]
                 }
             }
@@ -336,7 +336,6 @@ module.exports = function (grunt) {
             ],
             dist: [
                 'copy:styles',
-                'react:app',
                 'imagemin',
                 'svgmin',
                 'htmlmin'
